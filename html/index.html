@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GET Request Example</title>
+    <style>
+        /* Burada CSS kurallarını tanımlayabilirsiniz */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: fixed;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .item
+        {
+            height: 50px;
+            background-color: grey;
+        }
+    </style>
+</head>
+<body>
+    <div class = "container" id="dataContainer"></div>
+    
+    <script>
+
+function sendGet(data) {
+    return fetch("http://localhost:2626/desktopinfo?" + data)
+        .then(response => response.text())
+        .then(data => {
+            const parts = data.split('\n');
+            let arr = [];
+            parts.forEach(part => {
+                arr.push(part);
+            });
+            return arr;
+        })
+        .catch(error => {
+            console.error("GET isteği sırasında hata oluştu:", error);
+            return [];
+        });
+}
+
+        function clickfunc(elem, name)
+        {
+            name = name.replace(/:$/, '');
+
+            sendGet("/Users/oyumusak/Desktop/" + name).then(childitems => {
+                let counter = 0;
+                while (counter < childitems.length)
+                {
+                    const newItem = document.createElement("div");
+                    newItem.textContent = childitems[counter];
+                    console.log(childitems[counter]);
+                    elem.appendChild(newItem);
+                    counter++;
+                }
+            });
+        }
+
+
+    sendGet("/Users/oyumusak/Desktop").then(desktopList => {
+    let counter = 0;
+    while (counter < desktopList.length) {
+        const divElement = document.createElement("div");
+        const name = desktopList[counter];
+        divElement.textContent = name;
+        divElement.setAttribute("class", "item");
+        divElement.addEventListener("click", () => {
+            clickfunc(divElement, name);
+        });
+        dataContainer.appendChild(divElement);
+        counter++;
+    }
+});
+
+        /*
+                        const div = document.createElement("div");
+                        div.textContent = part; // Satırı div içine yerleştir
+                        div.setAttribute("class", "item");
+                        div.addEventListener("click", () => {
+                            let divv = document.createElement("div");
+                        });
+                        dataContainer.appendChild(div);
+
+        */
+
+
+
+
+    </script>
+</body>
+</html>

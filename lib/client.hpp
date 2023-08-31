@@ -14,6 +14,7 @@ class client
         std::string queryString;
         std::string protocol;
         std::string serverName;
+        std::string ipAddr;
         std::map<std::string, std::string>	headers;
         int postLen;
         std::string postVal;

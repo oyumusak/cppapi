@@ -26,20 +26,9 @@
 </head>
 <body>
 
-    <div class = "container">
-        <div>
-            <input type="submit" value="Clean Cache" onclick="sendPost('', 'http://localhost:2626/cleanCache')"/>
-        </div>
-        
-        <div>
-            <textarea id = "textArea" rows="50" cols="50"> </textarea>
-            <div>
-                <input type="submit" onclick="compile()" value="Run Code!" />
-            </div>
-        </div>
+    <input type="submit" value="Clean Cache" onclick="sendPost('', 'http://localhost:2626/cleanCache')"/>
 
-    </div>
-
+    <div class = "container" id="dataContainer"></div>
     
     <script>
 
@@ -59,8 +48,6 @@
                 return [];
             });
     }
-
-
 
     function sendPost(data, url) {
         // Sayfanın yeniden yüklenmesini engellemek için bu satırı kullanın
@@ -93,13 +80,38 @@
         };
     }
 
-
-    function compile()
+    function clickfunc(elem, name)
     {
-        var code = document.getElementById("textArea");
-        console.log(code.value);
-        sendPost(code.value, window.origin + "/compileC");
+        name = name.replace(/:$/, '');
+
+        sendGet("/Users/oyumusak/Desktop/" + name).then(childitems => {
+            let counter = 0;
+            while (counter < childitems.length)
+            {
+                const newItem = document.createElement("div");
+                newItem.textContent = childitems[counter];
+                console.log(childitems[counter]);
+                elem.appendChild(newItem);
+                counter++;
+            }
+        });
     }
+
+
+    sendGet("/Users/oyumusak/Desktop").then(desktopList => {
+        let counter = 0;
+        while (counter < desktopList.length) {
+            const divElement = document.createElement("div");
+            const name = desktopList[counter];
+            divElement.textContent = name;
+            divElement.setAttribute("class", "item");
+            divElement.addEventListener("click", () => {
+                clickfunc(divElement, name);
+            });
+            dataContainer.appendChild(divElement);
+            counter++;
+    }
+    });
 
 
     </script>
